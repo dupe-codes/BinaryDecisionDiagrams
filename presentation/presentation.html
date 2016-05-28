@@ -1,16 +1,30 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Title</title>
+    <title>Binary Decision Diagrams</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
     <style type="text/css">
       /* Slideshow styles */
+      /* Colors:
+       * Red: #EA526F
+       * Black: #070600
+       * Off-white: #F7F7FF
+       * Turquoise: #23BfD3
+       * Blue: #279AF1
+       */
+      body {
+        font-family: 'Roboto';
+      }
+      .title {
+        color: #279af1;
+      }
     </style>
   </head>
   <body>
 
 
-    
+
 
     <!-- Creation of slides goes below. Slides are dileanted with triple
         dashed lines: --- -->
@@ -18,7 +32,7 @@
 
 class: center, middle
 
-# `\(\LaTeX{}\)` in remark
+# .title[Binary Decision Diagrams]
 
 ---
 
@@ -37,6 +51,14 @@ $$e^{i\pi} + 1 = 0$$
         B-->D
         C-->D]
 
+---
+
+# Code Test
+
+```javascript
+var test = function() { console.log('hello'); }
+```
+
     </textarea>
 
 
@@ -48,6 +70,7 @@ $$e^{i\pi} + 1 = 0$$
 
     <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js" type="text/javascript"></script>
     <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured" type="text/javascript"></script>
+    <script   src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous"></script>
     <script src="./mermaid.min.js"></script>
     <link rel="stylesheet" href="./mermaid.css">
     <script>mermaid.initialize({startOnLoad:true});</script>
