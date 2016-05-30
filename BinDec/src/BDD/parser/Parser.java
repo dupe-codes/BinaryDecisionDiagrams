@@ -5,7 +5,6 @@ package BDD.parser;
  */
 
 import BDD.parser.expressions.*;
-import java.util.List;
 import java.util.ArrayList;
 
 public final class Parser {
@@ -21,7 +20,7 @@ public final class Parser {
     return readExpr(0);
   }
 
-  public List<String> getVariables() {
+  public ArrayList<String> getVariables() {
     return variables;
   }
 

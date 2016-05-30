@@ -9,15 +9,67 @@ package BDD;
  * and working with BDDs can be launched.
  */
 
+import java.util.HashMap;
+
 public final class BDD {
+    private HashMap<Node, Node> existingNodes;
+
+
+    private final class Node {
+      private String name;
+      private int index;
+      private Node low;
+      private Node high;
+
+      public Node(String name, int index, Node low, Node high) {
+        this.name = name;
+        this.index = index;
+        this.low = low;
+        this.high = high;
+      }
+
+      public int getIndex() {
+        return index;
+      }
+
+      @Override
+      public int hashCode() {
+        return toString().hashCode();
+      }
+
+      @Override
+      public String toString() {
+        return name + index + low.getIndex() + high.getIndex();
+      }
+
+      // TODO: Finish this...
+      @Override
+      public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof Node)) return false;
+        Node node = (Node)o;
+        return true;
+      }
+
+    }
 
     private BDD() {
       // Private constructor so that BDD instances cannot be directly created.
-      // Clients must use the getInstance method to create BDD objects
+      // Clients must use the of method to create BDD objects
     }
 
-    public BDD getInstance() {
-      return new BDD();
+    /*
+     * Constructs a new BDD out of the given boolean expression.
+     * TODO: Currently just uses arbtirary variable ordering given from the
+     * BoolExpression object. This should change.
+     */
+    public BDD of(BoolExpression expr) {
+      return null;
+    }
+
+    private Node makeNode(int index, Node low, Node high) {
+      if (low.equals(high)) return low;
+      return null;
     }
 
     // evaluate(x)

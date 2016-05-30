@@ -9,11 +9,11 @@ import BDD.parser.expressions.ExpressionTree;
 
 import java.io.ByteArrayInputStream;
 import java.util.Map;
-import java.util.List;
+import java.util.ArrayList;
 
 public final class BoolExpression {
   private ExpressionTree expr;
-  private List<String> variables;
+  private ArrayList<String> variables;
 
   /*
    * Construct a BoolExpression from the given string
@@ -29,6 +29,7 @@ public final class BoolExpression {
       variables = parser.getVariables();
     } catch (RuntimeException e) {
       System.out.println("An error occurred building the expression tree");
+      System.out.println(e);
     }
   }
 
