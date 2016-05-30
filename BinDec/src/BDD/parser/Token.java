@@ -1,4 +1,4 @@
-package cs166.BDD.parser;
+package BDD.parser;
 
 public enum Token {
   VARIABLE,

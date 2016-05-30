@@ -1,6 +1,6 @@
-package cs166.BDD.parser.expressions;
+package BDD.parser.expressions;
 
-import cs166.BDD.parser.Token;
+import BDD.parser.Token;
 import java.util.Map;
 
 public final class LiteralExpression extends ExpressionTree {

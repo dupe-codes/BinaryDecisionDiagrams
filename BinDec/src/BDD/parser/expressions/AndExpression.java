@@ -1,4 +1,4 @@
-package cs166.BDD.parser.expressions;
+package BDD.parser.expressions;
 
 import java.util.Map;
 

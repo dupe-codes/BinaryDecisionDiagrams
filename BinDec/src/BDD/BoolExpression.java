@@ -1,4 +1,4 @@
-package cs166.BDD;
+package BDD;
 
 /*
  * This file implements a class for representing boolean expressions

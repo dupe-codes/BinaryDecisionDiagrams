@@ -1,10 +1,10 @@
-package cs166.BDD.parser;
+package BDD.parser;
 
 /*
  * A simple parser for boolean expressions.
  */
 
-import cs166.BDD.parser.expressions.*;
+import BDD.parser.expressions.*;
 import java.util.List;
 import java.util.ArrayList;
 

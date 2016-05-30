@@ -1,10 +1,10 @@
-package cs166.BDD;
+package BDD;
 
 import java.io.*;
 
-import cs166.BDD.*;
-import cs166.BDD.parser.*;
-import cs166.BDD.parser.expressions.*;
+import BDD.*;
+import BDD.parser.*;
+import BDD.parser.expressions.*;
 
 public final class Tester {
 

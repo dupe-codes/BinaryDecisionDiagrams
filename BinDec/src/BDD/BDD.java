@@ -1,4 +1,4 @@
-package cs166.BDD;
+package BDD;
 
 /*
  * A framework for using Reduced Order Binary Decision Diagrams
