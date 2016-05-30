@@ -2,10 +2,13 @@ package cs166.BDD.parser;
 
 public enum Token {
   VARIABLE,
-  LITERAL,
+  TRUE,
+  FALSE,
   OR,
   AND,
   NOT,
+  LEFT_PAREN,
+  RIGHT_PAREN,
   INVALID,
   NONE
 }
