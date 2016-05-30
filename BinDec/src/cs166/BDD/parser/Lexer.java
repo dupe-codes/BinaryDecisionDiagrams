@@ -29,7 +29,7 @@ public final class Lexer {
    * Instructs the lexer to reuse the last given token.
    */
   public void saveToken() {
-    input.pushback();
+    input.pushBack();
   }
 
   public String getVariable() {

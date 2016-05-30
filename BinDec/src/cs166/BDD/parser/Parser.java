@@ -5,16 +5,24 @@ package cs166.BDD.parser;
  */
 
 import cs166.BDD.parser.expressions.*;
+import java.util.List;
+import java.util.ArrayList;
 
 public final class Parser {
   private Lexer lexer;
+  private ArrayList<String> variables;
 
   public Parser(Lexer lexer) {
     this.lexer = lexer;
+    variables = new ArrayList<String>();
   }
 
   public ExpressionTree buildExprTree() {
     return readExpr(0);
+  }
+
+  public List<String> getVariables() {
+    return variables;
   }
 
   private ExpressionTree readExpr(int precedence) {
@@ -35,7 +43,11 @@ public final class Parser {
   private ExpressionTree readTerm() {
     Token token = lexer.nextToken();
     if (token == Token.TRUE || token == Token.FALSE) return new LiteralExpression(token);
-    if (token == Token.VARIABLE) return new VariableExpression(lexer.getVariable());
+    if (token == Token.VARIABLE) {
+      String varName = lexer.getVariable();
+      variables.add(varName);
+      return new VariableExpression(varName);
+    }
     if (token == Token.NOT) return new NotExpression(readTerm());
     if (token != Token.LEFT_PAREN) throw new RuntimeException("Illegally formatted expression");
     ExpressionTree expr = readExpr(0);
