@@ -12,6 +12,6 @@ public final class OrExpression extends ExpressionTree {
   }
 
   public boolean evaluate(Map<String, Boolean> assignments) {
-    return true;
+    return left.evaluate(assignments) || right.evaluate(assignments);
   }
 }

@@ -10,6 +10,6 @@ public final class NotExpression extends ExpressionTree {
   }
 
   public boolean evaluate(Map<String, Boolean> assignments) {
-    return true;
+    return !expr.evaluate(assignments);
   }
 }

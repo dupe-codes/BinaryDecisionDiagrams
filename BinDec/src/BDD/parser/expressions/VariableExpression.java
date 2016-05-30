@@ -11,7 +11,7 @@ public final class VariableExpression extends ExpressionTree {
 
   public boolean evaluate(Map<String, Boolean> assignments) {
     Boolean result = assignments.get(name);
-    if (!result) {
+    if (result == null) {
       throw new RuntimeException("Variable " + name + " not in given assignments");
     }
     return result;
