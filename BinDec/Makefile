@@ -5,10 +5,10 @@ sourcefiles = \
 		src/BDD.java \
 		src/BoolExpression.java \
 		src/Tester.java \
-		src/parser/BoolToken.java \
-		src/parser/ExprLexer.java \
-		src/parser/statements/ExpressionTree.java \
-		src/parser/statements/OrStatement.java \
+		src/parser/Token.java \
+		src/parser/Lexer.java \
+		src/parser/Expressions/ExpressionTree.java \
+		src/parser/Expressions/OrExpression.java \
 		src/parser/Parser.java
 
 classfiles = $(sourcefiles:.java=.class)
