@@ -1,5 +1,10 @@
 package cs166.BDD.parser;
 
+/*
+ * A simple lexer for boolean expressions
+ * TODO: Add handling for XOR operations
+ */
+
 import java.io.*;
 
 public final class Lexer {
@@ -18,6 +23,13 @@ public final class Lexer {
     input.ordinaryChar('&');
     input.ordinaryChar('|');
     input.ordinaryChar('!');
+  }
+
+  /*
+   * Instructs the lexer to reuse the last given token.
+   */
+  public void saveToken() {
+    input.pushback();
   }
 
   public String getVariable() {
