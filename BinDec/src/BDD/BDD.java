@@ -12,6 +12,7 @@ package BDD;
 import BDD.graphWriter.GraphWriter;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.ArrayList;
 
 // TODO: Add a "setOrdering" method
@@ -70,7 +71,6 @@ public final class BDD {
       }
 
       // TODO: Improve this expensive recursion
-      //       note - actually might be okay due to string caching added above
       @Override
       public boolean equals(Object o) {
         if (o == this) return true;
@@ -83,6 +83,14 @@ public final class BDD {
 
       public static boolean isTerminalNode(Node node) {
         return node.equals(TRUE_NODE) || node.equals(FALSE_NODE);
+      }
+
+      public static boolean isFalseNode(Node node) {
+        return node.equals(FALSE_NODE);
+      }
+
+      public static boolean isTrueNode(Node node) {
+        return node.equals(TRUE_NODE);
       }
 
       public static Node getTrueNode() {
@@ -128,9 +136,11 @@ public final class BDD {
             int index, Node low, Node high) {
 
       if (low.equals(high)) return low;
+
       Node newNode = new Node(name, index, low, high);
       Node existing = existingNodes.get(newNode);
       if (existing != null) return existing;
+
       existingNodes.put(newNode, newNode);
       return newNode;
 
@@ -143,12 +153,53 @@ public final class BDD {
           return (expr.evaluate(assignments)) ? Node.getTrueNode() : Node.getFalseNode();
       }
       String curr = expr.getVariables().get(index);
-      System.out.println("Index "  + index + ": " + curr);
+
       assignments.put(curr, false);
       Node low = build(index + 1, expr, assignments, existingNodes);
+
       assignments.put(curr, true);
       Node high = build(index + 1, expr, assignments, existingNodes);
+
       return makeNode(existingNodes, curr, index, low, high);
+    }
+
+    /*
+     * Finds a satisfying assignment for the BDD.
+     * Throws an exception if no satisfying assignment exists.
+     *
+     * Usage:
+     *        try {
+     *            Map<String, Boolean> ans = myBdd.anySat();
+     *        } catch(IllegalArgumentException e) {
+     *            // no assignment exists!
+     *        }
+     */
+    public Map<String, Boolean> anySat() {
+      HashMap<String, Boolean> result = new HashMap<String, Boolean>();
+      if (!getSatisfyingAssignment(this.root, result)) {
+        throw new IllegalArgumentException("No satisfying assignment exists.");
+      }
+      return result;
+    }
+
+    /*
+     * Returns a satisfying assignment for the BDD rooted at curr.
+     * The satisfying assignment, if found, will be the lexicographically smallest
+     * such assignment.
+     *
+     * Returns false if no satisfying assignment exists.
+     */
+    private boolean getSatisfyingAssignment(Node curr, HashMap<String, Boolean> assignments) {
+      if (Node.isFalseNode(curr)) return false;
+      if (Node.isTrueNode(curr)) return true;
+      if (Node.isFalseNode(curr.low)) {
+        assignments.put(curr.name, true);
+        return getSatisfyingAssignment(curr.high, assignments);
+      }
+
+      // Otherwise low node must lead to satisfying assignment
+      assignments.put(curr.name, false);
+      return getSatisfyingAssignment(curr.low, assignments);
     }
 
     // Outputs the BDD as a dot graph
@@ -157,6 +208,7 @@ public final class BDD {
     public void outputGraph(String resultFile) {
       GraphWriter outWriter = new GraphWriter();
       outWriter.startGraph();
+      outWriter.addHeader();
 
       // Add the nodes
       for (Node node : existingNodes.keySet()) {

@@ -6,7 +6,7 @@ import BDD.*;
 import BDD.parser.*;
 import BDD.parser.expressions.*;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public final class Tester {
 
@@ -17,6 +17,8 @@ public final class Tester {
     System.out.println(expr.getVariables());
     BDD testBdd = BDD.of(expr);
     testBdd.outputGraph("test2.dot");
+    Map<String, Boolean> ans = testBdd.anySat();
+    System.out.println(ans);
 
     System.out.println("");
     String test2 = "(a | b) & (!a | !b)";

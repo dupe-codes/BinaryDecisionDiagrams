@@ -26,6 +26,13 @@ import java.io.FileWriter;
      addln("digraph G {");
    }
 
+   public void addHeader() {
+     addln("fontsize = 12;");
+     //addln("graph [dpi=600];");
+     //addln("ratio=compress;");
+     //addln("size=\"4,4\";");
+   }
+
    public void addln(String line) {
      graph.append(line + "\n");
    }
