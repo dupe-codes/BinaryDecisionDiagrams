@@ -37,4 +37,8 @@ public final class BoolExpression {
     return expr.evaluate(assignments);
   }
 
+  public ArrayList<String> getVariables() {
+    return variables;
+  }
+
 }
