@@ -1,3 +1,6 @@
 # Ignore compiled resources
-./cs166/
+BDD
 **/*.class
+
+# Ignore tmp files
+tmp

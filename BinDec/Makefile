@@ -12,6 +12,7 @@ sourcefiles = \
 		src/BDD/parser/Expressions/LiteralExpression.java \
 		src/BDD/parser/Parser.java \
 		src/BDD/BoolExpression.java \
+		src/BDD/graphWriter/GraphWriter.java \
 		src/BDD/BDD.java \
 		src/BDD/Tester.java
 

@@ -9,10 +9,16 @@ package BDD;
  * and working with BDDs can be launched.
  */
 
-import java.util.HashMap;
+import BDD.graphWriter.GraphWriter;
 
+import java.util.HashMap;
+import java.util.ArrayList;
+
+// TODO: Add a "setOrdering" method
 public final class BDD {
     private Node root;
+    private HashMap<Node, Node> existingNodes;
+    private BoolExpression expr;
 
     private static final class Node {
       private String name;
@@ -21,7 +27,7 @@ public final class BDD {
       private Node high;
 
       private static final Node TRUE_NODE = new Node("true", -1);
-      private static final Node FALSE_NODE = new Node("false", -1);
+      private static final Node FALSE_NODE = new Node("false", -2);
 
       private String stringified = null;
 
@@ -75,6 +81,10 @@ public final class BDD {
         return true;
       }
 
+      public static boolean isTerminalNode(Node node) {
+        return node.equals(TRUE_NODE) || node.equals(FALSE_NODE);
+      }
+
       public static Node getTrueNode() {
         return TRUE_NODE;
       }
@@ -85,9 +95,17 @@ public final class BDD {
 
     }
 
-    private BDD() {
+    private BDD(BoolExpression expr) {
       // Private constructor so that BDD instances cannot be directly created.
       // Clients must use the of method to create BDD objects
+      this.expr = expr;
+      this.existingNodes = new HashMap<Node, Node>();
+      this.existingNodes.put(Node.getFalseNode(), Node.getFalseNode());
+      this.existingNodes.put(Node.getTrueNode(), Node.getTrueNode());
+    }
+
+    public ArrayList<String> getVariables() {
+      return expr.getVariables();
     }
 
     /*
@@ -98,10 +116,9 @@ public final class BDD {
      * Usage: BDD myBdd = BDD.of(new BoolExpression('(a | b) & y'));
      */
     public static BDD of(BoolExpression expr) {
-      BDD result = new BDD();
+      BDD result = new BDD(expr);
       HashMap<String, Boolean> assignments = new HashMap<String, Boolean>();
-      HashMap<Node, Node> existingNodes = new HashMap<Node, Node>();
-      result.root = build(0, expr, assignments, existingNodes);
+      result.root = build(0, expr, assignments, result.existingNodes);
 
       System.out.println(result.root);
       return result;
@@ -132,6 +149,49 @@ public final class BDD {
       assignments.put(curr, true);
       Node high = build(index + 1, expr, assignments, existingNodes);
       return makeNode(existingNodes, curr, index, low, high);
+    }
+
+    // Outputs the BDD as a dot graph
+    // TODO: Make up better way of generating unique ID for each node. hash codes
+    //       will have collisions lol. Maybe a unique static counter in the Node class?
+    public void outputGraph(String resultFile) {
+      GraphWriter outWriter = new GraphWriter();
+      outWriter.startGraph();
+
+      // Add the nodes
+      for (Node node : existingNodes.keySet()) {
+        outWriter.addln(
+          String.format(
+            "Node%0$d [label=%1s, shape=%2s]",
+            Math.abs(node.hashCode()),
+            node.name,
+            (Node.isTerminalNode(node)) ? "box" : "circle"
+          )
+        );
+      }
+
+      // Add the edges
+      for (Node node : existingNodes.keySet()) {
+          if (!Node.isTerminalNode(node)) {
+            outWriter.addln(
+              String.format("Node%1$d->Node%2$d [label=0, style=dashed]",
+                Math.abs(node.hashCode()),
+                Math.abs(node.low.hashCode())
+              )
+            );
+            outWriter.addln(
+              String.format("Node%1$d->Node%2$d [label=1, style=solid]",
+                Math.abs(node.hashCode()),
+                Math.abs(node.high.hashCode())
+              )
+            );
+          }
+      }
+      outWriter.endGraph();
+
+      if (!outWriter.writeGraphToFile(resultFile)) {
+        System.out.println("Unable to write graph");
+      }
     }
 
     // evaluate(x)
