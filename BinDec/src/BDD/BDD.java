@@ -11,9 +11,7 @@ package BDD;
 
 import BDD.graphWriter.GraphWriter;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ArrayList;
+import java.util.*;
 
 // TODO: Add a "setOrdering" method
 public final class BDD {
@@ -108,8 +106,8 @@ public final class BDD {
       // Clients must use the of method to create BDD objects
       this.expr = expr;
       this.existingNodes = new HashMap<Node, Node>();
-      this.existingNodes.put(Node.getFalseNode(), Node.getFalseNode());
-      this.existingNodes.put(Node.getTrueNode(), Node.getTrueNode());
+      //this.existingNodes.put(Node.getFalseNode(), Node.getFalseNode());
+      //this.existingNodes.put(Node.getTrueNode(), Node.getTrueNode());
     }
 
     public ArrayList<String> getVariables() {
@@ -124,9 +122,16 @@ public final class BDD {
      * Usage: BDD myBdd = BDD.of(new BoolExpression('(a | b) & y'));
      */
     public static BDD of(BoolExpression expr) {
+      return of(expr, expr.getVariables());
+    }
+
+    public static BDD of(BoolExpression expr, List<String> vars) {
+      if (vars.size() != expr.getVariables().size()) {
+        throw new IllegalArgumentException("Variables missing from given variable ordering");
+      }
       BDD result = new BDD(expr);
       HashMap<String, Boolean> assignments = new HashMap<String, Boolean>();
-      result.root = build(0, expr, assignments, result.existingNodes);
+      result.root = build(1, expr, vars, assignments, result.existingNodes);
 
       System.out.println(result.root);
       return result;
@@ -146,19 +151,21 @@ public final class BDD {
 
     }
 
-    private static Node build(int index, BoolExpression expr,
+    private static Node build(int index, BoolExpression expr, List<String> vars,
           HashMap<String, Boolean> assignments, HashMap<Node, Node> existingNodes) {
 
-      if (index >= expr.getVariables().size()) {
-          return (expr.evaluate(assignments)) ? Node.getTrueNode() : Node.getFalseNode();
+      if (index > vars.size()) {
+        Node result = (expr.evaluate(assignments)) ? Node.getTrueNode() : Node.getFalseNode();
+        existingNodes.put(result, result);
+        return result;
       }
-      String curr = expr.getVariables().get(index);
+      String curr = vars.get(index-1);
 
       assignments.put(curr, false);
-      Node low = build(index + 1, expr, assignments, existingNodes);
+      Node low = build(index + 1, expr, vars, assignments, existingNodes);
 
       assignments.put(curr, true);
-      Node high = build(index + 1, expr, assignments, existingNodes);
+      Node high = build(index + 1, expr, vars, assignments, existingNodes);
 
       return makeNode(existingNodes, curr, index, low, high);
     }
@@ -192,6 +199,7 @@ public final class BDD {
     private boolean getSatisfyingAssignment(Node curr, HashMap<String, Boolean> assignments) {
       if (Node.isFalseNode(curr)) return false;
       if (Node.isTrueNode(curr)) return true;
+
       if (Node.isFalseNode(curr.low)) {
         assignments.put(curr.name, true);
         return getSatisfyingAssignment(curr.high, assignments);
@@ -250,9 +258,40 @@ public final class BDD {
 
     // getSmallestSolution()
 
-    // getNumSolutions()
+    public double getNumSolutions() {
+      return solnCount(this.root);
+    }
+
+    private double solnCount(Node root) {
+      if (Node.isFalseNode(root)) return 0;
+      if (Node.isTrueNode(root)) return 1;
+      int numVars = this.expr.getVariables().size();
+      int lowIndex = (Node.isTerminalNode(root.low)) ? numVars + 1 : root.low.index;
+      int highIndex = (Node.isTerminalNode(root.high)) ? numVars + 1 : root.high.index;
+
+      return Math.pow(2, lowIndex - root.index - 1)*solnCount(root.low)
+                + Math.pow(2, highIndex - root.index - 1)*solnCount(root.high);
+    }
 
     // getRandomSolution()
 
-    // getAllSolutions()
+    public List<Map<String, Boolean>> getAllSolutions() {
+      return allSatAssignments(this.root);
+    }
+
+    private List<Map<String, Boolean>> allSatAssignments(Node root) {
+        ArrayList<Map<String, Boolean>> result = new ArrayList<Map<String, Boolean>>();
+        if (Node.isFalseNode(root)) return result;
+        if (Node.isTrueNode(root)) {
+          result.add(new HashMap<String, Boolean>());
+          return result;
+        }
+        List<Map<String, Boolean>> lowResults = allSatAssignments(root.low);
+        List<Map<String, Boolean>> highResults = allSatAssignments(root.high);
+        for (Map<String, Boolean> lowSoln : lowResults) lowSoln.put(root.name, false);
+        for (Map<String, Boolean> highSoln : highResults) highSoln.put(root.name, true);
+        result.addAll(lowResults);
+        result.addAll(highResults);
+        return result;
+    }
 }

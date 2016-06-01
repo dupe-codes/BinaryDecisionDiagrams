@@ -28,8 +28,8 @@ import java.io.FileWriter;
 
    public void addHeader() {
      addln("fontsize = 12;");
-     //addln("graph [dpi=600];");
-     //addln("ratio=compress;");
+     addln("center = true;");
+     addln("ratio=auto;");
      //addln("size=\"4,4\";");
    }
 
