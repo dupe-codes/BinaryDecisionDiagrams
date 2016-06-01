@@ -1,0 +1,16 @@
+digraph G {
+fontsize = 12;
+center = true;
+ratio=auto;
+Node764509938 [label=true, shape=box]
+Node116479256 [label=false, shape=box]
+Node133960647 [label=x1, shape=circle]
+Node2048810355 [label=x1, shape=circle]
+Node1128524397 [label=x2, shape=circle]
+Node133960647->Node764509938 [label=0, style=dashed]
+Node133960647->Node116479256 [label=1, style=solid]
+Node2048810355->Node116479256 [label=0, style=dashed]
+Node2048810355->Node764509938 [label=1, style=solid]
+Node1128524397->Node2048810355 [label=0, style=dashed]
+Node1128524397->Node133960647 [label=1, style=solid]
+}

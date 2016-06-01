@@ -18,6 +18,7 @@ public final class BDD {
     private Node root;
     private HashMap<Node, Node> existingNodes;
     private BoolExpression expr;
+    private Double numSolutions;
 
     private static final class Node {
       private String name;
@@ -132,8 +133,6 @@ public final class BDD {
       BDD result = new BDD(expr);
       HashMap<String, Boolean> assignments = new HashMap<String, Boolean>();
       result.root = build(1, expr, vars, assignments, result.existingNodes);
-
-      System.out.println(result.root);
       return result;
     }
 
@@ -250,7 +249,7 @@ public final class BDD {
       outWriter.endGraph();
 
       if (!outWriter.writeGraphToFile(resultFile)) {
-        System.out.println("Unable to write graph");
+        System.err.println("Unable to write graph");
       }
     }
 
@@ -259,7 +258,10 @@ public final class BDD {
     // getSmallestSolution()
 
     public double getNumSolutions() {
-      return solnCount(this.root);
+      if (numSolutions == null) {
+        numSolutions = solnCount(root);
+      }
+      return numSolutions;
     }
 
     private double solnCount(Node root) {

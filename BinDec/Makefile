@@ -1,5 +1,6 @@
 sourcePackage = \
-		BDD
+		BDD \
+		ProblemSolver
 
 sourcefiles = \
 		src/BDD/parser/Token.java \
@@ -14,7 +15,8 @@ sourcefiles = \
 		src/BDD/BoolExpression.java \
 		src/BDD/graphWriter/GraphWriter.java \
 		src/BDD/BDD.java \
-		src/BDD/Tester.java
+		src/BDD/Tester.java \
+		src/ProblemSolver/ProblemSolver.java
 
 classfiles = $(sourcefiles:.java=.class)
 

@@ -30,7 +30,6 @@ import java.io.FileWriter;
      addln("fontsize = 12;");
      addln("center = true;");
      addln("ratio=auto;");
-     //addln("size=\"4,4\";");
    }
 
    public void addln(String line) {
