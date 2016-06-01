@@ -107,12 +107,16 @@ public final class BDD {
       // Clients must use the of method to create BDD objects
       this.expr = expr;
       this.existingNodes = new HashMap<Node, Node>();
-      //this.existingNodes.put(Node.getFalseNode(), Node.getFalseNode());
-      //this.existingNodes.put(Node.getTrueNode(), Node.getTrueNode());
     }
 
     public ArrayList<String> getVariables() {
       return expr.getVariables();
+    }
+
+    // TODO: this is a hack.. lol get rid of it
+    private static int numNodes = 0;
+    public static int getNumNodes() {
+      return numNodes;
     }
 
     /*
@@ -126,6 +130,19 @@ public final class BDD {
       return of(expr, expr.getVariables());
     }
 
+    public static Comparator<String> RandomComparator = new Comparator<String>() {
+      private Random rgen = new Random();
+      public int compare(String var1, String var2) {
+        return (rgen.nextBoolean()) ? 1 : -1;
+      }
+    };
+
+    public static BDD ofRandomOrder(BoolExpression expr) {
+      List<String> vars = expr.getVariables();
+      Collections.sort(vars, RandomComparator);
+      return of(expr, vars);
+    }
+
     public static BDD of(BoolExpression expr, List<String> vars) {
       if (vars.size() != expr.getVariables().size()) {
         throw new IllegalArgumentException("Variables missing from given variable ordering");
@@ -133,6 +150,7 @@ public final class BDD {
       BDD result = new BDD(expr);
       HashMap<String, Boolean> assignments = new HashMap<String, Boolean>();
       result.root = build(1, expr, vars, assignments, result.existingNodes);
+      numNodes += 2; // TODO: this is incorrect, but works for our BDDs for now...
       return result;
     }
 
@@ -145,6 +163,7 @@ public final class BDD {
       Node existing = existingNodes.get(newNode);
       if (existing != null) return existing;
 
+      numNodes++;
       existingNodes.put(newNode, newNode);
       return newNode;
 
