@@ -91,30 +91,10 @@ class: center, middle
 - Variables can be assigned either 1 or 0
 - The overall expression is evaluated and results in either 1 or 0
 
----
-
-
-# But they're really just functions!
-
---
-- We can think of an expression as a function `\(\ f : \{0,1\}^n \rightarrow \{0,1\} \)`
 --
 
-- They take `\( n \)` boolean arguments (assignments to `\( n \)` variables)
-
---
-
-- Plug the arguments into their corresponding expression
-
---
-
-- And then return the result, either 0 or 1
-
----
-
-class: center, middle
-
- ## You can use either mental model when reasoning about boolean expressions
+- We can think of an expression as a function
+  - `\(\ f : \{0,1\}^n \rightarrow \{0,1\} \)`
 
 ---
 
@@ -126,7 +106,7 @@ Oh you bet!
 
 --
 
-- Many, many, many problems can be expressed as boolean functions
+- Many, many problems can be expressed as boolean functions
 
 --
 
@@ -143,40 +123,6 @@ Oh you bet!
 --
 
   - Combinatorial optimization
-
----
-
-#The Vertex Cover Problem
-
- [vertex cover graph here]
-
---
-
-- `\( x1 \rightarrow ( y1 \wedge y2 )\)`
-
---
-
-- `\( x2 \rightarrow ( y1 \wedge y3 )\)`
-
---
-
-- `\( x3 \rightarrow ( y2 \wedge y3 )\)`
-
---
-
-- `\( y1 \rightarrow ( x1 \vee x2 )\)`
-
---
-
-- `\( y2 \rightarrow ( x1 \vee x3 )\)`
-
---
-
-- `\( y3 \rightarrow ( x2 \vee x3 )\)`
-
---
-
-- `\( y1 \wedge y2 \wedge y3 \)`
 
 ---
 
@@ -211,7 +157,7 @@ This means we'll first consider what happens when we assign x.
 
 --
 
-Then what happens when we assign y, <em>given</em> the previous assignment to x.
+Then see what happens when we assign y, <em>given</em> the previous assignment to x.
 
 ---
 
@@ -248,6 +194,11 @@ class: center
 ---
 
 # The resulting structure is called a Binary Decision Tree (BDT)
+
+--
+
+Terminology note: we call the 0 labeled edges the <em>low</em> edges, and 1 labeled
+edges the <em>high</em> edges
 
 --
 
@@ -309,6 +260,100 @@ class: center
   - It still leaves some structural properties we can improve upon...
 
 ---
+class: center
+
+# Redundant tests
+
+[ insert graph of x1 or x3 with redundant x2 test]
+
+--
+
+The low and high edges of the x2 node <em>lead to the exact same result</em>
+
+---
+
+[ insert graph of x1 or x3 with redundant x2 node gone]
+
+---
+
+
+# <em>Reduced Ordered Binary Decision Diagrams</em> (ROBDD)
+
+
+--
+
+Note : Technically all of our structures thus far have been ordered
+
+--
+
+- Cons:
+
+--
+
+  - Still `\( O(2^n) \)` size in the worst case
+
+--
+
+- Pros:
+
+--
+
+  - A lot of expressions end up much, much smaller in practice
+
+--
+
+  - We can run simple graph algorithms to perform useful operations on the expression
+
+--
+
+  - We've gained the property of <em>canoncity</em>.
+
+---
+
+class: center
+
+# Canoncity of ROBDDs
+
+## For a fixed variable ordering, each boolean function has a canonical (or unique) representation as a ROBDD.
+
+--
+
+<em>Proof:</em> By induction on the number of variables.
+
+
+---
+
+## .title[Thanks to the canoncity property, we can:]
+
+--
+
+- check if an expression is a tautology (every possible assignment is satisfying)
+
+--
+
+- and check if an expression is unsatisfiable
+
+--
+
+in <em>CONSTANT</em> time!
+
+--
+
+We can also check if <b>two expressions are equal</b> in time proportional to the sizes
+of their ROBDDs.
+
+---
+class: center
+
+<iframe src="https://giphy.com/embed/5aLrlDiJPMPFS" width="480" height="558" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="http://giphy.com/gifs/jon-stewart-the-daily-show-5aLrlDiJPMPFS">via GIPHY</a></p>
+
+---
+
+class: center, middle
+
+## .subtitle[ROBDDs are so useful, one assumes you mean them when you say BDD. We'll use that convention moving forward.]
+
+---
 Highly dependent on the variable ordering
 
 TODO: Show example of same expression, different variables orderings here
@@ -348,7 +393,38 @@ public static void main(String args[]) {
 > 2.0
 ```
 ---
-"Sit down, buckle your seatbelts, and get ready Keith because I'm about to blow your god damn mind"
+
+#The Vertex Cover Problem
+
+ [vertex cover graph here]
+
+--
+
+- `\( x1 \rightarrow ( y1 \wedge y2 )\)`
+
+--
+
+- `\( x2 \rightarrow ( y1 \wedge y3 )\)`
+
+--
+
+- `\( x3 \rightarrow ( y2 \wedge y3 )\)`
+
+--
+
+- `\( y1 \rightarrow ( x1 \vee x2 )\)`
+
+--
+
+- `\( y2 \rightarrow ( x1 \vee x3 )\)`
+
+--
+
+- `\( y3 \rightarrow ( x2 \vee x3 )\)`
+
+--
+
+- `\( y1 \wedge y2 \wedge y3 \)`
 
     </textarea>
 
