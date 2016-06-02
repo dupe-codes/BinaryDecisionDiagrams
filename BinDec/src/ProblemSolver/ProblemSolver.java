@@ -47,8 +47,6 @@ public final class ProblemSolver {
       }
 
       String expr = builder.toString();
-      System.out.println(expr);
-      System.out.println("\n" + varOrder);
       options.put("expression", expr);
 
       // TODO: make this better

@@ -4,3 +4,6 @@ BDD/*.class
 
 # Ignore tmp files
 tmp
+
+# ignore outputs
+outputs

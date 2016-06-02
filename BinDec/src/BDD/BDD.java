@@ -13,7 +13,6 @@ import BDD.graphWriter.GraphWriter;
 
 import java.util.*;
 
-// TODO: Add a "setOrdering" method
 public final class BDD {
     private Node root;
     private HashMap<Node, Node> existingNodes;
@@ -130,7 +129,7 @@ public final class BDD {
       return of(expr, expr.getVariables());
     }
 
-    public static Comparator<String> RandomComparator = new Comparator<String>() {
+    private static Comparator<String> RandomComparator = new Comparator<String>() {
       private Random rgen = new Random();
       public int compare(String var1, String var2) {
         return (rgen.nextBoolean()) ? 1 : -1;
@@ -272,9 +271,7 @@ public final class BDD {
       }
     }
 
-    // evaluate(x)
-
-    // getSmallestSolution()
+    // TODO: evaluate(x)
 
     public double getNumSolutions() {
       if (numSolutions == null) {
@@ -283,6 +280,9 @@ public final class BDD {
       return numSolutions;
     }
 
+    /*
+     * TODO: make this more efficient with dynamic programming
+     */
     private double solnCount(Node root) {
       if (Node.isFalseNode(root)) return 0;
       if (Node.isTrueNode(root)) return 1;
@@ -294,7 +294,7 @@ public final class BDD {
                 + Math.pow(2, highIndex - root.index - 1)*solnCount(root.high);
     }
 
-    // getRandomSolution()
+    // TODO: getRandomSolution()
 
     public List<Map<String, Boolean>> getAllSolutions() {
       return allSatAssignments(this.root);

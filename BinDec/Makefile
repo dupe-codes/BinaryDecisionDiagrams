@@ -26,6 +26,7 @@ all: $(classfiles)
 
 clean:
 		rm -rf ./BDD/
+		rm -rf ./ProblemSolver/
 		rm -rf ./tmp/
 		rm -f ./src/**/*.class
 		rm -f ./src/**/**/*.class

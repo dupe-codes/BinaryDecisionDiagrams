@@ -16,8 +16,29 @@
       body {
         font-family: 'Roboto';
       }
+
+      div.remark-slide-content {
+        font-size: 24px;
+      }
+
       .title {
         color: #279af1;
+      }
+      .statement {
+        color: #279af1;
+        font-size: 36px;
+      }
+
+      .subtitle {
+        color: #EA526F;
+      }
+
+      h1 {
+        color: #279af1;
+      }
+
+      ul li{
+        margin-bottom: 24px;
       }
     </style>
   </head>
@@ -36,6 +57,258 @@ class: center, middle
 
 ---
 
+# Boolean Expressions
+
+---
+
+# Boolean Expressions
+
+.statement[$$ ( x \vee y) \wedge (\neg x \vee \neg y) $$]
+
+---
+
+# Boolean Expressions
+
+.statement[$$ ( x \vee y) \wedge (\neg x \vee \neg y) $$]
+
+- We'll use the convention of representing true and false as 1/0
+
+---
+
+# Boolean Expressions
+
+.statement[$$ ( x \vee y) \wedge (\neg x \vee \neg y) $$]
+
+- We'll use the convention of representing true and false as 1/0
+- Variables can be assigned either 1 or 0
+---
+
+# Boolean Expressions
+
+.statement[$$ ( x \vee y) \wedge (\neg x \vee \neg y) $$]
+
+- We'll use the convention of representing true and false as 1/0
+- Variables can be assigned either 1 or 0
+- The overall expression is evaluated and results in either 1 or 0
+
+---
+
+
+# But they're really just functions!
+
+--
+- We can think of an expression as a function `\(\ f : \{0,1\}^n \rightarrow \{0,1\} \)`
+--
+
+- They take `\( n \)` boolean arguments (assignments to `\( n \)` variables)
+
+--
+
+- Plug the arguments into their corresponding expression
+
+--
+
+- And then return the result, either 0 or 1
+
+---
+
+class: center, middle
+
+ ## You can use either mental model when reasoning about boolean expressions
+
+---
+
+# Do boolean functions even come up anywhere useful?
+
+--
+
+Oh you bet!
+
+--
+
+- Many, many, many problems can be expressed as boolean functions
+
+--
+
+- They come up all the time in:
+
+--
+
+  - circuit design and formal verification
+
+--
+
+  - grapy theory
+
+--
+
+  - Combinatorial optimization
+
+---
+
+#The Vertex Cover Problem
+
+ [vertex cover graph here]
+
+--
+
+- `\( x1 \rightarrow ( y1 \wedge y2 )\)`
+
+--
+
+- `\( x2 \rightarrow ( y1 \wedge y3 )\)`
+
+--
+
+- `\( x3 \rightarrow ( y2 \wedge y3 )\)`
+
+--
+
+- `\( y1 \rightarrow ( x1 \vee x2 )\)`
+
+--
+
+- `\( y2 \rightarrow ( x1 \vee x3 )\)`
+
+--
+
+- `\( y3 \rightarrow ( x2 \vee x3 )\)`
+
+--
+
+- `\( y1 \wedge y2 \wedge y3 \)`
+
+---
+
+class: center, middle
+
+## .subtitle[So how can we efficiently solve these things?]
+
+---
+
+class: center, middle
+
+# `\( (x \vee y) \wedge (\neg x \vee \neg y) \)`
+
+---
+
+# Variable Ordering
+
+## `\( (x \vee y) \wedge (\neg x \vee \neg y) \)`
+
+--
+
+- We'll first fix an ordering of the variables
+
+--
+
+  - `\( x < y \)`
+
+--
+
+
+This means we'll first consider what happens when we assign x.
+
+--
+
+Then what happens when we assign y, <em>given</em> the previous assignment to x.
+
+---
+
+class: center
+
+# `\( (x \vee y) \wedge (\neg x \vee \neg y) \)`
+
+[graph of just x node here]
+
+---
+
+class: center
+
+# `\( (x \vee y) \wedge (\neg x \vee \neg y) \)`
+
+[graph of just x node here with edges here]
+
+---
+
+class: center
+
+# `\( (x \vee y) \wedge (\neg x \vee \neg y) \)`
+
+[graph x node + y nodes]
+
+---
+
+class: center
+
+# `\( (x \vee y) \wedge (\neg x \vee \neg y) \)`
+
+[Evaluated graph here]
+
+---
+
+# The resulting structure is called a Binary Decision Tree (BDT)
+
+--
+
+- Pros:
+
+--
+
+  - Given the BDT for a function, we can test whether a given assignment is satisfying in
+      `\( \Theta(n) \)` time!
+
+--
+
+- Cons:
+
+--
+
+  - We end up with `\( \Theta(2^n) \)` nodes :(
+
+---
+class: middle, center
+
+# .subtitle[Let's make a few observations]
+
+---
+
+class: center
+
+ [insert graph of x iff y and a iff b]
+
+--
+
+1. Some subtrees are identical
+
+---
+
+class: center
+
+[insert OBDD of x iff y and a iff b]
+
+---
+
+# The result is called a Binary Decision Diagram
+
+--
+
+- Pros:
+
+--
+
+  - While still `\( O(2^n) \)` at worst in size, in practice these are usually much smaller
+  than BDTs
+
+--
+
+- Cons:
+
+--
+
+  - It still leaves some structural properties we can improve upon...
+
+---
 Highly dependent on the variable ordering
 
 TODO: Show example of same expression, different variables orderings here
@@ -54,18 +327,28 @@ Display formula:
 $$e^{i\pi} + 1 = 0$$
 
 .mermaid[graph TD
-        A-->B
+        A---B
         A-.->C
         B-->D
         C-->D]
 
 ---
 
-# Code Test
+# BDD Creation Framework
 
-```javascript
-var test = function() { console.log('hello'); }
+```java
+public static void main(String args[]) {
+    String myExpr = "(a | b) & (!a | !b)";
+    BDD bdd = BDD.of(myExpr);
+    System.out.println(bdd.getNumSolutions());
+}
 ```
+
+```
+> 2.0
+```
+---
+"Sit down, buckle your seatbelts, and get ready Keith because I'm about to blow your god damn mind"
 
     </textarea>
 
