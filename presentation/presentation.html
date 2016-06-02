@@ -40,6 +40,30 @@
       ul li{
         margin-bottom: 24px;
       }
+
+      .goodIFF img {
+        width: auto;
+        height: 440px;
+      }
+
+      .badIFF img {
+        width: auto;
+        height: 420px;
+      }
+
+      .redundant img {
+        width: auto;
+        height: 380px;
+      }
+
+      .subexpressions img {
+        height: 405px;
+      }
+
+      .bdd img {
+        height: 600px;
+      }
+
     </style>
   </head>
   <body>
@@ -118,17 +142,17 @@ Oh you bet!
 
 --
 
-  - grapy theory
+  - graph theory
 
 --
 
-  - Combinatorial optimization
+  - combinatorial optimization
 
 ---
 
 class: center, middle
 
-## .subtitle[So how can we efficiently solve these things?]
+## .subtitle[So how can we efficiently work with these things?]
 
 ---
 
@@ -165,7 +189,7 @@ class: center
 
 # `\( (x \vee y) \wedge (\neg x \vee \neg y) \)`
 
-[graph of just x node here]
+![Default-aligned image](node.jpg)
 
 ---
 
@@ -173,7 +197,7 @@ class: center
 
 # `\( (x \vee y) \wedge (\neg x \vee \neg y) \)`
 
-[graph of just x node here with edges here]
+![Default-aligned image](node-edges.jpg)
 
 ---
 
@@ -181,7 +205,7 @@ class: center
 
 # `\( (x \vee y) \wedge (\neg x \vee \neg y) \)`
 
-[graph x node + y nodes]
+![Default-aligned image](two-nodes.jpg)
 
 ---
 
@@ -189,7 +213,7 @@ class: center
 
 # `\( (x \vee y) \wedge (\neg x \vee \neg y) \)`
 
-[Evaluated graph here]
+![Default-aligned image](done.jpg)
 
 ---
 
@@ -218,6 +242,7 @@ edges the <em>high</em> edges
   - We end up with `\( \Theta(2^n) \)` nodes :(
 
 ---
+
 class: middle, center
 
 # .subtitle[Let's make a few observations]
@@ -226,17 +251,19 @@ class: middle, center
 
 class: center
 
- [insert graph of x iff y and a iff b]
+# `\( (x1 \leftrightarrow y1) \wedge (x2 \leftrightarrow y2)\)`
+
+ .subexpressions[![Default-aligned image](subexpressions.jpg)]
 
 --
 
-1. Some subtrees are identical
+Some subtrees are identical
 
 ---
 
 class: center
 
-[insert OBDD of x iff y and a iff b]
+.bdd[![Default-aligned image](goodIFF.jpg)]
 
 ---
 
@@ -264,7 +291,7 @@ class: center
 
 # Redundant tests
 
-[ insert graph of x1 or x3 with redundant x2 test]
+.redundant[![Default-aligned image](redundant.jpg)]
 
 --
 
@@ -272,7 +299,11 @@ The low and high edges of the x2 node <em>lead to the exact same result</em>
 
 ---
 
-[ insert graph of x1 or x3 with redundant x2 node gone]
+class: center
+
+# Redundant tests
+
+![default-aligned image](redundantGone.jpg)
 
 ---
 
@@ -354,28 +385,95 @@ class: center, middle
 ## .subtitle[ROBDDs are so useful, one assumes you mean them when you say BDD. We'll use that convention moving forward.]
 
 ---
-Highly dependent on the variable ordering
 
-TODO: Show example of same expression, different variables orderings here
+# What else can these BDD thingys do?
 
-But the problem of finding the best variable ordering is NP-hard!
+--
+Let's denote the size of a BDD of `\( n \)` variables as `\( B \)`
+
+Via your run of the mill graph algorithms (think DFS), we can:
+
+--
+
+  - Count the number of satisfying assignments: `\(O(B)\)`
+
+--
+
+  - Find a random satisfying assignment: `\( O(B) \)`
+
+--
+
+  - Find <em>all</em> satisfying assignments: `\( O(2^{B}n) \)`
+
+--
+
+  - And more!
 
 ---
 
-# Display and Inline
+class: middle, center
 
-1. This is an inline integral: `\(\int_a^bf(x)dx\)`
-2. More `\(x={a \over b}\)` formulae.
+# .subtitle[Okay... there must be a catch, right?]
 
-Display formula:
+Of course my young padawan.
 
-$$e^{i\pi} + 1 = 0$$
+---
 
-.mermaid[graph TD
-        A---B
-        A-.->C
-        B-->D
-        C-->D]
+# Variable Ordering
+
+## a blessing and a curse
+
+--
+
+The resulting size of a BDD is <em>highly dependent</em> on the variable ordering
+fixed when building it.
+
+---
+class: center
+
+# `\( (x1 \leftrightarrow y1) \wedge (x2 \leftrightarrow y2)\)`
+
+`\( x1 < y1 < x2 < y2\)`
+
+.goodIFF[![Default-aligned image](goodIFF.jpg)]
+
+---
+class: center
+
+# `\( (x1 \leftrightarrow y1) \wedge (x2 \leftrightarrow y2)\)`
+
+`\( x1 < x2 < y1 < y2\)`
+
+.badIFF[![Default-aligned image](badIFF.jpg)]
+
+---
+
+# Variable Ordering
+
+## a blessing and a curse
+
+
+The resulting size of a BDD is <em>highly dependent</em> on the variable ordering
+fixed when building it.
+
+Intuitively, choosing an ordering that minimizes variable dependence leads to good BDDs
+
+--
+
+Theoreticians have placed nice bounds on the size of an expression + variable ordering's
+BDDs based on properties of the expression modeled as circuits
+
+---
+
+class: center, middle
+
+<iframe src="https://giphy.com/embed/CDMz3fckRXXDG" width="480" height="269" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="http://giphy.com/gifs/love-television-cartoon-CDMz3fckRXXDG">via GIPHY</a></p>
+
+---
+
+class: center, middle
+
+# .subtitle[Now for something <em>interesting</em>]
 
 ---
 

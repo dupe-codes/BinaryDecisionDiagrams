@@ -1,0 +1,19 @@
+digraph G {
+fontsize = 12;
+center = true;
+ratio=auto;
+
+x1 [label=x1, shape=circle]
+x2 [label=x2, shape=circle]
+x3 [label=x3, shape=circle]
+true [label=true, shape=box]
+false [label=false, shape=box]
+
+x1->x2 [label = 0, style=dashed]
+x1->true [label=1, style=solid]
+x2->x3 [style=dashed]
+x2->x3 [style=solid]
+x3->true [label=1, style=solid]
+x3->false [label=0, style=dashed]
+
+}
