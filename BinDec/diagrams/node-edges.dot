@@ -1,9 +1,0 @@
-digraph G {
-
-x [label=x, shape=circle]
-y [style=invis]
-z [style=invis]
-
-x->y [label=0, style=dashed]
-x->z [label=1, style=solid]
-}

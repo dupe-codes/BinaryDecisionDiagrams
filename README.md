@@ -1,1 +1,1 @@
-# CS166 Final Project: Binary Decision Diagrams
+# Binary Decision Diagrams
